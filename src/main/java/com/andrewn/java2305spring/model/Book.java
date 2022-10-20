@@ -11,6 +11,9 @@ public class Book {
     @Column(unique = true, nullable = false, length = 100)
     String name;
 
+    @Column(name="publish_year")
+    int publishYear;
+
     @Override
     public String toString() {
         return "Book{" +
@@ -19,9 +22,6 @@ public class Book {
                 ", publishYear=" + publishYear +
                 '}';
     }
-
-    @Column(name="publish_year")
-    int publishYear;
 
     public Book() {
     }

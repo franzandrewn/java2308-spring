@@ -13,17 +13,20 @@ import org.springframework.context.annotation.Bean;
 public class Java2305SpringApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(Java2305SpringApplication.class);
-
 	public static void main(String[] args) {
 		SpringApplication.run(Java2305SpringApplication.class, args);
 	}
-
 	@Bean
 	CommandLineRunner initDatabase(BookRepository repository) {
 
 		return args -> {
 			log.info("Preloading " + repository.save(new Book("Lord of the Rings", 1969)));
 			log.info("Preloading " + repository.save(new Book("It", 1970)));
+			log.info("Preloading " + repository.save(new Book("a", 1)));
+			log.info("Preloading " + repository.save(new Book("b", 1900)));
+			log.info("Preloading " + repository.save(new Book("e", 1925)));
+			log.info("Preloading " + repository.save(new Book("d", 1978)));
+			log.info("Preloading " + repository.save(new Book("c", 1925)));
 		};
 	}
 

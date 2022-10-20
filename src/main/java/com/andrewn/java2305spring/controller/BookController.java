@@ -5,19 +5,31 @@ import com.andrewn.java2305spring.model.Book;
 import com.andrewn.java2305spring.repository.BookRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 public class BookController {
-    private final BookRepository bookRepository;
+    // Создать класс Employee из трех полей Long id, String name, String role
+    // Добавить аннотации, чтобы существовала таблица employee с этими столбцами
+    // Создать интерфейс EmployeeRepository, который наследуется от CrudRepository
+    // добавить в него метод, который с помощью ключевых слов find, By и имени
+    // столбца ищет всех сотрудников по роли
+    // Создать EmployeeController, который является @RestController и содержит два метода
+    // getEmployees, возвращающий список всех сотрудников
+    // getEmployeesWithRole, возвращающий список сотрудников определенной роли (роль взять из @RequestParam)
 
+    private final BookRepository bookRepository;
     public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
-
     @GetMapping("/books")
     Iterable<Book> allBooks() {
         return bookRepository.findAll();
+    }
+
+    @GetMapping("/books/name")
+    List<Book> bookByName(@RequestParam(name="name") String name) {
+        return bookRepository.filterByName(name);
     }
 
 //    @GetMapping("/book")
@@ -28,8 +40,8 @@ public class BookController {
 //        } else {
 //            return null;
 //        }
-//    }
 
+//    }
 //    @GetMapping("/create-book")
 //    Book createBook(@RequestParam(name="name") String bookName,
 //                    @RequestParam(name="year", required=false, defaultValue="0") String publishYear) {
@@ -54,6 +66,7 @@ public class BookController {
 //        } else {
 //            return null;
 //        }
+
 //    }
 
     @PostMapping("/books")
@@ -82,5 +95,17 @@ public class BookController {
                     book.setPublishYear(changedBook.getPublishYear());
                     return bookRepository.save(book);
                 }).orElseGet(() -> bookRepository.save(changedBook));
+    }
+    // книги после конкретного года (RequestHeader + репозиторий)
+
+    @GetMapping("/books/after-year")
+    List<Book> booksAfterYear(@RequestParam(name="after") int year) {
+        return bookRepository.findByPublishYearGreaterThan(year);
+    }
+
+    @GetMapping("/books/between")
+    List<Book> booksBetween(@RequestHeader(name="before") int before,
+                            @RequestHeader(name="after") int after) {
+        return bookRepository.findByPublishYearBetweenOrderByPublishYearDescNameAsc(after, before);
     }
 }
